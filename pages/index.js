@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import tw from 'twin.macro'
+import {FlexContainer} from '../components/Layout'
 
 export default function Home() {
   return (
@@ -8,7 +9,11 @@ export default function Home() {
         <title>Top Cryptos Today</title>
       </Head>
 
-      <main></main>
+      <FlexContainer twClasses={tw`bg-black text-white`}>
+      </FlexContainer>
+      <main>
+
+      </main>
     </div>
   )
 }

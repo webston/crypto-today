@@ -8,7 +8,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "@babel/plugin-proposal-export-default-from": "^7.8.3",
+    "@bit/bit.envs.compilers.babel": "^7.0.4",
+    "@bit/kencookco.envs.compilers.nextjs": "^9.0.0",
+    "@bit/webston.web-ui.layout": "^1.0.0",
+    "dotenv": "^8.2.0",
+    "dotenv-webpack": "^1.7.0",
     "next": "9.3.5",
+    "next-transpile-modules": "^3.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1"
   },
@@ -17,5 +24,9 @@
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
     "twin.macro": "^1.0.0-alpha.10"
+  },
+  "bit": {
+    "componentsDefaultDirectory": "components/{name}",
+    "packageManager": "npm"
   }
 }

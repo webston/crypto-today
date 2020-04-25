@@ -1,10 +1,21 @@
 {
   "presets": [
-    "next/babel",
-    "@emotion/babel-preset-css-prop"
+    [
+      "next/babel", 
+      { "preset-env":
+        { 
+          "targets": 
+          { 
+            "ie": 11,
+          }
+        }
+      }
+    ],
+    "@emotion/babel-preset-css-prop",
   ],
   "plugins": [
-    "babel-plugin-macros"
+    ["emotion"],
+    ["babel-plugin-macros"],
+    ["@babel/plugin-proposal-export-default-from"]
   ]
 }
-
