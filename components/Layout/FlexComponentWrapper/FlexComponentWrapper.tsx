@@ -6,7 +6,7 @@ import {MQ} from '../lib/helpers'
 const FlexComponentWrapper = ({children, containerClasses}) => {	
 	let initialStyles = tw`w-full`
 
-	let sectionPadding = tw`my-40px md:my-50px mdl:my-90px`
+	let sectionPadding = tw`my-40px md:my-50px`
 
 	return (
 		<div css={css`${initialStyles} ${sectionPadding} ${containerClasses}`}>
@@ -15,4 +15,4 @@ const FlexComponentWrapper = ({children, containerClasses}) => {
 	)
 }
 
-export default FlexComponentWrapper
+export {FlexComponentWrapper}

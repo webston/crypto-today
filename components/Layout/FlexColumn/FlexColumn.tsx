@@ -3,8 +3,8 @@ import tw from 'twin.macro'
 import {css} from "@emotion/core"
 
 const FlexColumn = ({children, containerClasses}) => {
-	let initialStyles = tw`px-20px smd:px-20px mdl:px-15px`;
-
+	let initialStyles = tw`px-20px`;
+	
 	return (
 		<div css={css`${initialStyles} ${containerClasses}`}>
 			{children}
@@ -12,4 +12,4 @@ const FlexColumn = ({children, containerClasses}) => {
 	)
 }
 
-export default FlexColumn
+export {FlexColumn}
