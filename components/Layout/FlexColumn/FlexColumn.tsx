@@ -1,8 +1,12 @@
-import React from "react"
+import React, { FunctionComponent } from "react"
 import tw from 'twin.macro'
 import {css} from "@emotion/core"
 
-const FlexColumn = ({children, containerClasses}) => {
+type Props = {
+	containerClasses?: any
+}
+
+const FlexColumn: FunctionComponent<Props> = ({containerClasses, children}) => {
 	let initialStyles = tw`px-20px`;
 	
 	return (

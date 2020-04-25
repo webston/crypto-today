@@ -1,8 +1,12 @@
-import React from "react"
+import React, { FunctionComponent } from "react"
 import tw from 'twin.macro'
 import {css} from "@emotion/core"
 
-const FlexContainer = ({children, containerClasses}) => {
+type Props = {
+	containerClasses?: any
+}
+
+const FlexContainer: FunctionComponent<Props> = ({containerClasses, children}) => {
 	let initialStyles = tw`flex flex-wrap`;
 
 	return ( 
