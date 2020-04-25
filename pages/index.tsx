@@ -10,6 +10,7 @@ export default function Home() {
       </Head>
 
       <FlexContainer twClasses={tw`bg-black text-white`}>
+        asdas
       </FlexContainer>
       <main>
 

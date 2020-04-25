@@ -23,7 +23,9 @@
     "@emotion/babel-preset-css-prop": "^10.0.27",
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
-    "twin.macro": "^1.0.0-alpha.10"
+    "@types/node": "^13.13.2",
+    "twin.macro": "^1.0.0-alpha.10",
+    "typescript": "^3.8.3"
   },
   "bit": {
     "componentsDefaultDirectory": "components/{name}",
