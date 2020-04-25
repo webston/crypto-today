@@ -9,8 +9,8 @@ export default function Home() {
         <title>Top Cryptos Today</title>
       </Head>
 
-      <FlexContainer twClasses={tw`bg-black text-white`}>
-
+      <FlexContainer containerClasses={tw`bg-black text-white`}>
+        
       </FlexContainer>
       <main>
 
