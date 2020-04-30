@@ -18,18 +18,18 @@ module.exports = withTM(
                 }
             }
 
-            cfg.entry = async () => {
-                const entries = await originalEntry()
+            // cfg.entry = async () => {
+            //     const entries = await originalEntry()
     
-                if (
-                    entries['main.js'] &&
-                    !entries['main.js'].includes('./lib/polyfills.js')
-                ) {
-                    entries['main.js'].unshift('./lib/polyfills.js')
-                }
+            //     if (
+            //         entries['main.js'] &&
+            //         !entries['main.js'].includes('./lib/polyfills.ts')
+            //     ) {
+            //         entries['main.js'].unshift('./lib/polyfills.ts')
+            //     }
     
-                return entries
-            }
+            //     return entries
+            // }
     
             cfg.plugins.push(new Dotenv({
                 path: path.join(__dirname, '.env'),
