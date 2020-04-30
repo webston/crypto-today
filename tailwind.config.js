@@ -2,6 +2,9 @@ const plugin = require('tailwindcss/plugin')
 
 module.exports = {
     theme: {
+        fontFamily: {
+            'roboto': ['Roboto', 'sans-serif'],
+        },
         container: {
             padding: '2rem'
         },
@@ -36,6 +39,9 @@ module.exports = {
             '110': '6.875rem',
         },
         extend: {
+            colors: {
+                'blue': '#1771F1'
+            },
             maxWidth: {
                 '600': '600px',
                 '700': '700px',
