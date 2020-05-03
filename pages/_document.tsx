@@ -1,4 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
+import tw from 'twin.macro'
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -12,7 +13,7 @@ class MyDocument extends Document {
         <Head>
             <link rel="stylesheet" href="https://use.typekit.net/rkg8dvg.css" />
         </Head>
-        <body>
+        <body css={tw`bg-light-green`}>
           <Main />
           <NextScript />
         </body>

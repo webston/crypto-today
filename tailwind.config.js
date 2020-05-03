@@ -40,11 +40,16 @@ module.exports = {
         },
         extend: {
             colors: {
-                'blue': '#1771F1'
+                'green': '#00CF91',
+                'blue': '#1771F1',
+                'light-blue': '#eef5ff',
+                'light-green': '#F0F6F4',
+                'red': '#FF6A61'
             },
             maxWidth: {
                 '600': '600px',
                 '700': '700px',
+                '900': '900px',
                 '1200' : '1200px',
             },
             width: {

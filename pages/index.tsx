@@ -12,19 +12,26 @@ import CoinsTable from "../components/Partials/CoinsTable"
 type Props = {}
 
 const Home: FunctionComponent<Props> = () => {
-  const {data, error} = useSWR<any>('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false', fetch)
+  const data = useSWR(`${process.env.API_URL}coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true`, fetch)
+
+  const coins = data.data
+  const error = data.error
   
   return (
     <Container css={tw`py-100px`}>
       <FlexContainer containerClasses={tw`flex justify-center`}>
-        <FlexColumn containerClasses={tw`w-full max-w-700 text-right mb-10px`}>
-          <Paragraph>
-            Powered by <DynamicLink href='https://www.coingecko.com/'>CoinGecko API</DynamicLink>
-          </Paragraph>
-        </FlexColumn>
-        <FlexColumn containerClasses={tw`flex flex-wrap justify-center w-full max-w-700`}>
+        {
+          !error ? (
+            <FlexColumn containerClasses={tw`w-full text-right mb-10px`}>
+              <Paragraph>
+                Powered by <DynamicLink href='https://www.coingecko.com/' target="_blank">CoinGecko API</DynamicLink>
+              </Paragraph>
+            </FlexColumn>
+          ) : null
+        }
+        <FlexColumn containerClasses={tw`flex flex-wrap justify-center w-full`}>
           {
-            <CoinsTable data={data} error={error}/>
+            <CoinsTable coins={coins} error={error}/>
           }
         </FlexColumn>
       </FlexContainer>
