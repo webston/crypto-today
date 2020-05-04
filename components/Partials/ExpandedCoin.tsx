@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from "react"
+import React, { FunctionComponent, useEffect, useState } from "react"
 import tw from 'twin.macro'
 import {css} from "@emotion/core"
 import { CoinIdentity } from "./CoinIdentity"
@@ -21,24 +21,34 @@ type Props = {
 }
 
 const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, marketCap, currentPrice, dayChange}) => {
-    const coin = useSWR(`${process.env.API_URL}coins/${id}/market_chart?vs_currency=usd&days=180`, fetch)
-    let chartData
-    
-    if(coin.data) {
-        chartData = coin.data.prices
-    }
+    const [chartData, setChartData] = useState()
+    const [activeInterval, setInterval] = useState('1')
+    const [activeTickInterval, setTickInterval] = useState(30)
+
+    let coin = useSWR(activeInterval ? `${process.env.API_URL}coins/${id}/market_chart?vs_currency=usd&days=${activeInterval}` : null, fetch) 
+
+    useEffect(() => {
+        if(coin && coin.data) {
+            setChartData(coin.data.prices)
+        }
+    }, [coin, coin.data])
     
     const getDate = (x) => { return x[0] }
     const getPrice = (x) => { return x[1] }
 
     const formatXAxis = (tickItem) => {
-        return moment(tickItem).format('MMM YY')
+        if(activeInterval === '1') {
+            return moment(tickItem).format('HH:mm')
+        } else if(activeInterval === '7' || activeInterval === '31' || activeInterval === '93') {
+            return moment(tickItem).format('DD MMM YY')
+        } else {
+            return moment(tickItem).format('MMM YY')
+        }
     }
 
     const formatYAxis = (tickItem) => {
         return '$ ' + tickItem 
     }
-
 
     const CustomTooltip = (data) => {
         if (data.active) {
@@ -58,22 +68,54 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
         }
     
         return null;
-    };
-    
-    
+    }
+
+    const intervals = [
+        {
+            interval: '24h',
+            days: '1',
+            tickInterval: 30
+        },
+        {
+            interval: '7d',
+            days: '7',
+            tickInterval: 24
+        },
+        {
+            interval: '1m',
+            days: '31',
+            tickInterval: 100
+        },
+        {
+            interval: '3m',
+            days: '93',
+            tickInterval: 10
+        },
+        {
+            interval: '1y',
+            days: '365',
+            tickInterval: 31
+        },
+        {
+            interval: 'max',
+            days: 'max',
+            tickInterval: 62
+        },
+    ]
+
 	return ( 
 		<div css={tw`w-full p-3`}>
             <div css={tw`flex justify-between`}>
                 <div>
                     {
-                        !coin ? (
+                        !chartData ? (
                             <Skeleton/>
                         ) : <CoinIdentity image={image} symbol={symbol} name={name} />
                     }
                 </div>
                 <div>
                     {
-                        !coin ? (
+                        !chartData ? (
                             <Skeleton/>
                         ) : (
                             <>
@@ -99,13 +141,25 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                         <AreaChart width={100} data={chartData} css={css`width: 100% !important;`}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <Area type="monotone" dataKey={getPrice} dot={false} strokeWidth={1} stroke={process.env.BLUE} fill={process.env.LIGHT_BLUE} />
-                            <XAxis dataKey={getDate} tickFormatter={formatXAxis} interval={30} tick={{fontSize: 14}} />
+                            <XAxis dataKey={getDate} tickFormatter={formatXAxis} interval={activeTickInterval} tick={{fontSize: 14}} />
                             <YAxis dataKey={getPrice} tick={{fontSize: 14}} tickFormatter={formatYAxis} />
                             <Tooltip content={<CustomTooltip />} />
                         </AreaChart>
                     </ResponsiveContainer>
                 ) : null
             }
+            <div css={tw`flex w-full justify-between`}>
+                {
+                    intervals.map((interval, index) => (
+                        <div css={tw`text-center bg-green`} onClick={() => {
+                            setInterval(interval.days)
+                            setTickInterval(interval.tickInterval)
+                        }}>
+                            {interval.interval}
+                        </div>            
+                    ))
+                }
+            </div>
             </div>
         </div>
 	)
