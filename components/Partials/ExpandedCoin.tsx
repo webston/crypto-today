@@ -6,9 +6,12 @@ import { Paragraph, CoinData } from "../Typography"
 import { PriceChange } from "../../lib/helpers"
 import useSWR from 'swr'
 import fetch from '../../lib/fetch'
-import { ResponsiveContainer, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+// import { ResponsiveContainer, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import Skeleton from "react-loading-skeleton"
 import moment from 'moment'
+import { Line } from 'react-chartjs-2';
+import _ from 'lodash'
+
 
 type Props = {
     id: string,
@@ -22,6 +25,8 @@ type Props = {
 
 const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, marketCap, currentPrice, dayChange}) => {
     const [chartData, setChartData] = useState()
+    const [coinPrices, setCoinPrices] = useState([])
+    const [coinDates, setCoinDates] = useState([])
     const [activeInterval, setInterval] = useState('1')
     const [activeTickInterval, setTickInterval] = useState(30)
 
@@ -29,7 +34,23 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
 
     useEffect(() => {
         if(coin && coin.data) {
-            setChartData(coin.data.prices)
+            const coinData = coin.data.prices
+
+            setChartData(coinData)
+
+            let prices = [] 
+            
+            let dates = []
+                    
+            _.each(coinData, (data) => {
+                dates.push(data[0])
+                prices.push(data[1])
+            })
+
+            if(dates && prices) {
+                setCoinPrices(prices)
+                setCoinDates(dates)
+            }
         }
     }, [coin, coin.data])
     
@@ -102,7 +123,7 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
             tickInterval: 62
         },
     ]
-
+    
 	return ( 
 		<div css={tw`w-full p-3`}>
             <div css={tw`flex justify-between`}>
@@ -137,15 +158,93 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
             <div css={tw`mt-50px`}>
             {
                 chartData ? (
-                    <ResponsiveContainer width='100%' height={500}>
-                        <AreaChart width={100} data={chartData} css={css`width: 100% !important;`}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <Area type="monotone" dataKey={getPrice} dot={false} strokeWidth={1} stroke={process.env.BLUE} fill={process.env.LIGHT_BLUE} />
-                            <XAxis dataKey={getDate} tickFormatter={formatXAxis} interval={activeTickInterval} tick={{fontSize: 14}} />
-                            <YAxis dataKey={getPrice} tick={{fontSize: 14}} tickFormatter={formatYAxis} />
-                            <Tooltip content={<CustomTooltip />} />
-                        </AreaChart>
-                    </ResponsiveContainer>
+                    // <ResponsiveContainer width='100%' height={500}>
+                    //     <AreaChart data={chartData} css={css`width: 100% !important;`}>
+                    //         <CartesianGrid strokeDasharray="3 3" />
+                    //         <Area type="monotone" dataKey={getPrice} dot={false} strokeWidth={1} stroke={process.env.BLUE} fill={process.env.LIGHT_BLUE} />
+                    //         <XAxis dataKey={getDate} tick={{fontSize: 14}} tickFormatter={formatXAxis} interval={activeTickInterval} />
+                    //         <YAxis dataKey={getPrice} tick={{fontSize: 14}} tickFormatter={formatYAxis} />
+                    //         <Tooltip content={<CustomTooltip />} />
+                    //     </AreaChart>
+                    // </ResponsiveContainer>
+
+                    <Line data={
+                        {
+                            labels: coinDates,
+                            datasets: [{
+                                data: coinPrices,
+                                borderColor: process.env.BLUE,
+                                borderWidth: 1, 
+                                backgroundColor: process.env.LIGHT_BLUE,
+                                pointRadius: 0
+                            }],
+                        }
+                    }
+                    
+                    options={
+                        {
+                            responsive: true,
+                            tooltips: {
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: '#FFF',
+                                titleFontColor: 'black',
+                                bodyFontColor: 'black',
+                                callbacks: {
+                                    title: tooltipItem => {
+                                        console.log(tooltipItem[0].xlabel)
+
+                                        return tooltipItem[0].xLabel
+                                        // return moment(item.label).format('LLL')
+                                    },
+                                    label: (item, data) => {
+                                        const price = typeof item.yLabel == 'number' ? [item.yLabel > 1 || item.yLabel  < -1 ? item.yLabel.toFixed(2) : item.yLabel.toFixed(6)] : item.yLabel
+
+                                        return '$ ' + price
+                                    }
+                                }
+                            },
+                            legend: {
+                                display: false
+                            },
+                            hover: {
+                                mode: 'index',
+                                intersect: false
+                            },
+                            elements: {
+                                line: {
+                                    tension: 0
+                                }
+                            },
+                            scales: {
+                                yAxes: [
+                                    {
+                                        ticks: {
+                                            callback: (value, index, values) => {
+                                                return '$ ' + value
+                                            },
+                                        },
+                                    }
+                                ],
+                                xAxes: [
+                                    {
+                                        ticks: {
+                                            callback: (value, index, values) => {
+
+                                                if(activeInterval === '1') {
+                                                    return moment(value).format('HH:mm')
+                                                } else if(activeInterval === '7' || activeInterval === '31' || activeInterval === '93') {
+                                                    return moment(value).format('DD MMM YY')
+                                                } else {
+                                                    return moment(value).format('MMM YY')
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }/>
                 ) : null
             }
             <div css={tw`flex w-full justify-between`}>
