@@ -23,6 +23,14 @@ type Props = {
     dayChange: number,
 }
 
+const CustomSkeleton = () => {
+    return (
+        <div css={tw`py-12px`}>
+            <Skeleton width={100}/>
+        </div>
+    )
+}
+
 const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, marketCap, currentPrice, dayChange}) => {
     const [chartData, setChartData] = useState()
     const [coinPrices, setCoinPrices] = useState([])
@@ -53,42 +61,9 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
             }
         }
     }, [coin, coin.data])
-    
-    const getDate = (x) => { return x[0] }
-    const getPrice = (x) => { return x[1] }
 
-    const formatXAxis = (tickItem) => {
-        if(activeInterval === '1') {
-            return moment(tickItem).format('HH:mm')
-        } else if(activeInterval === '7' || activeInterval === '31' || activeInterval === '93') {
-            return moment(tickItem).format('DD MMM YY')
-        } else {
-            return moment(tickItem).format('MMM YY')
-        }
-    }
-
-    const formatYAxis = (tickItem) => {
-        return '$ ' + tickItem 
-    }
-
-    const CustomTooltip = (data) => {
-        if (data.active) {
-            const price = data.payload[0].value
-            return (
-            <div className="custom-tooltip" css={tw`bg-white p-3`}>
-                <p css={tw`text-14`}>
-                    
-                    <b>Price:</b> $ {
-                    price > 1 || price  < -1 ? price .toFixed(2) : price.toFixed(6)}
-                </p>
-                <p css={tw`text-14`}>
-                    {moment(data.label).format('LLL')}
-                </p>
-            </div>
-            );
-        }
-    
-        return null;
+    const returnPrice = (price) => {
+        return price > 1 || price  < -1 ? price.toFixed(3) : price.toFixed(6)
     }
 
     const intervals = [
@@ -125,20 +100,20 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
     ]
     
 	return ( 
-		<div css={tw`w-full p-3`}>
+		<div css={tw`w-full p-3 hocus:cursor-auto`}>
             <div css={tw`flex justify-between`}>
                 <div>
                     {
-                        !chartData ? (
-                            <Skeleton/>
-                        ) : <CoinIdentity image={image} symbol={symbol} name={name} />
+                        !chartData ? 
+                            <CustomSkeleton />
+                        : <CoinIdentity image={image} symbol={symbol} name={name} />
                     }
                 </div>
                 <div>
                     {
-                        !chartData ? (
-                            <Skeleton/>
-                        ) : (
+                        !chartData ? 
+                            <CustomSkeleton />
+                        : (
                             <>
                             <CoinData css={tw`font-bold`}>Current Price</CoinData>
                             <CoinData>{'$ ' + currentPrice}</CoinData>
@@ -147,27 +122,48 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                     }
                 </div>
                 <div>
-                    <CoinData css={tw`font-bold`}>24h Change</CoinData>
-                    <CoinData>{PriceChange(dayChange)}</CoinData>
+                    {
+                        !chartData ? 
+                            <CustomSkeleton />
+                        : (
+                            <>
+                                <CoinData css={tw`font-bold`}>24h Change</CoinData>
+                                <CoinData>{PriceChange(dayChange)}</CoinData>
+                            </>
+                        )
+                    }
                 </div>
                 <div>
-                    <CoinData css={tw`font-bold`}>Market Cap</CoinData>
-                    <CoinData>{'$ ' + marketCap.toLocaleString()}</CoinData>
+                    {
+                        !chartData ? 
+                            <CustomSkeleton />
+                        : (
+                            <>
+                                <CoinData css={tw`font-bold`}>Market Cap</CoinData>
+                                <CoinData>{'$ ' + marketCap.toLocaleString()}</CoinData>
+                            </>
+                        )
+                    }
                 </div>
             </div>
-            <div css={tw`mt-50px`}>
+            <div css={tw`flex w-full mt-50px`}>
+                {
+                    !chartData ? 
+                        <CustomSkeleton />
+                    : 
+                    intervals.map((interval, index) => (
+                        <div css={[tw`text-center hocus:cursor-pointer border border-blue px-2 py-1 rounded mx-5px text-14 font-roboto hocus:bg-light-blue`, css`transition: all 0.3s;`, activeInterval === interval.days ? tw`bg-light-blue` : null]} onClick={() => {
+                            setInterval(interval.days)
+                            setTickInterval(interval.tickInterval)
+                        }}>
+                            {interval.interval}
+                        </div>            
+                    ))
+                }
+            </div>
+            <div css={tw`mt-20px`}>
             {
                 chartData ? (
-                    // <ResponsiveContainer width='100%' height={500}>
-                    //     <AreaChart data={chartData} css={css`width: 100% !important;`}>
-                    //         <CartesianGrid strokeDasharray="3 3" />
-                    //         <Area type="monotone" dataKey={getPrice} dot={false} strokeWidth={1} stroke={process.env.BLUE} fill={process.env.LIGHT_BLUE} />
-                    //         <XAxis dataKey={getDate} tick={{fontSize: 14}} tickFormatter={formatXAxis} interval={activeTickInterval} />
-                    //         <YAxis dataKey={getPrice} tick={{fontSize: 14}} tickFormatter={formatYAxis} />
-                    //         <Tooltip content={<CustomTooltip />} />
-                    //     </AreaChart>
-                    // </ResponsiveContainer>
-
                     <Line data={
                         {
                             labels: coinDates,
@@ -191,16 +187,13 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                                 titleFontColor: 'black',
                                 bodyFontColor: 'black',
                                 callbacks: {
-                                    title: tooltipItem => {
-                                        console.log(tooltipItem[0].xlabel)
-
-                                        return tooltipItem[0].xLabel
-                                        // return moment(item.label).format('LLL')
+                                    title: (item) => {
+                                        return moment.unix(parseInt(item[0].label)/1000).format('LLL')
                                     },
-                                    label: (item, data) => {
-                                        const price = typeof item.yLabel == 'number' ? [item.yLabel > 1 || item.yLabel  < -1 ? item.yLabel.toFixed(2) : item.yLabel.toFixed(6)] : item.yLabel
-
-                                        return '$ ' + price
+                                    label: (item, data) => {    
+                                        const price = typeof item.yLabel == 'number' ? returnPrice(item.yLabel) : item.yLabel
+                                        
+                                        return ' $ ' + price
                                     }
                                 }
                             },
@@ -221,7 +214,7 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                                     {
                                         ticks: {
                                             callback: (value, index, values) => {
-                                                return '$ ' + value
+                                                return '$ ' + returnPrice(value)
                                             },
                                         },
                                     }
@@ -245,20 +238,8 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                             }
                         }
                     }/>
-                ) : null
+                ) : <CustomSkeleton />
             }
-            <div css={tw`flex w-full justify-between`}>
-                {
-                    intervals.map((interval, index) => (
-                        <div css={tw`text-center bg-green`} onClick={() => {
-                            setInterval(interval.days)
-                            setTickInterval(interval.tickInterval)
-                        }}>
-                            {interval.interval}
-                        </div>            
-                    ))
-                }
-            </div>
             </div>
         </div>
 	)

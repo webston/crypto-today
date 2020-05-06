@@ -61,7 +61,7 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error}) => {
               }
 
               return (
-                <tr css={[tw`border-b w-full hocus:cursor-pointer hocus:bg-gray-100`, css`transition: all 0.3s; max-height: 100px;`, activeCoin ? css`max-height: 300px;` : null]} key={index} onClick={() => {
+                <tr css={[tw`border-b w-full hocus:cursor-pointer`, css`transition: all 0.3s; max-height: 100px;`, activeCoin ? css`max-height: 300px;` : tw`hocus:bg-gray-100`]} key={index} onClick={() => {
                   !expandedCoin || expandedCoin !== index + 1 ? openCoin(index + 1) : !activeCoin ? openCoin(null) : null
                 }}>
                   <TableItem css={[css`transition: all 0.3s;`, activeCoin ? tw`bg-gray-100` : null, activeCoin ? css`max-height: 200px;` : css`max-height: 100px`]} colSpan={activeCoin ? 6 : null}>

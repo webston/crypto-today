@@ -24,7 +24,7 @@ const Home: FunctionComponent<Props> = () => {
           !error ? (
             <FlexColumn containerClasses={tw`w-full text-right mb-10px`}>
               <Paragraph>
-                Powered by <DynamicLink href='https://www.coingecko.com/' target="_blank">CoinGecko API</DynamicLink>
+                API Powered by <DynamicLink href='https://www.coingecko.com/' target="_blank">CoinGecko</DynamicLink>
               </Paragraph>
             </FlexColumn>
           ) : null
