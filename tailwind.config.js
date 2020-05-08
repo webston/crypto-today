@@ -42,6 +42,7 @@ module.exports = {
             colors: {
                 'green': '#00CF91',
                 'blue': '#1771F1',
+                'opacity-blue': 'rgba(23, 113, 241, 0.9)',
                 'light-blue': '#eef5ff',
                 'light-green': '#F0F6F4',
                 'red': '#FF6A61'
@@ -114,6 +115,9 @@ module.exports = {
                 '100px': '100px',
                 '112px': '112px',
                 '187px': '187px',
+            },
+            height: {
+                '40px': '40px'
             },
             padding: {
                 '4px': '4px',

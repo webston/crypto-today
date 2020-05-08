@@ -6,12 +6,9 @@ import { Paragraph, CoinData } from "../Typography"
 import { PriceChange } from "../../lib/helpers"
 import useSWR from 'swr'
 import fetch from '../../lib/fetch'
-// import { ResponsiveContainer, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import Skeleton from "react-loading-skeleton"
-import moment from 'moment'
 import { Line } from 'react-chartjs-2';
 import _ from 'lodash'
-
 
 type Props = {
     id: string,
@@ -21,6 +18,7 @@ type Props = {
     marketCap: number,
     currentPrice: number,
     dayChange: number,
+    openCoin: any
 }
 
 const CustomSkeleton = () => {
@@ -31,14 +29,14 @@ const CustomSkeleton = () => {
     )
 }
 
-const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, marketCap, currentPrice, dayChange}) => {
+const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, marketCap, currentPrice, dayChange, openCoin}) => {
     const [chartData, setChartData] = useState()
     const [coinPrices, setCoinPrices] = useState([])
     const [coinDates, setCoinDates] = useState([])
-    const [activeInterval, setInterval] = useState('1')
-    const [activeTickInterval, setTickInterval] = useState(30)
+    const [activeInterval, setInterval] = useState('24h')
+    const [activeIntervalDays, setIntervalDays] = useState('1')
 
-    let coin = useSWR(activeInterval ? `${process.env.API_URL}coins/${id}/market_chart?vs_currency=usd&days=${activeInterval}` : null, fetch) 
+    let coin = useSWR(activeIntervalDays ? `${process.env.API_URL}coins/${id}/market_chart?vs_currency=usd&days=${activeIntervalDays}` : null, fetch) 
 
     useEffect(() => {
         if(coin && coin.data) {
@@ -62,46 +60,40 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
         }
     }, [coin, coin.data])
 
-    const returnPrice = (price) => {
-        return price > 1 || price  < -1 ? price.toFixed(3) : price.toFixed(6)
+    const returnPrice = (price, short?) => {
+        return price > 1 || price  < -1 ? [short ? price.toFixed(3) : price] : price.toFixed(6)
     }
 
     const intervals = [
         {
             interval: '24h',
             days: '1',
-            tickInterval: 30
         },
         {
             interval: '7d',
             days: '7',
-            tickInterval: 24
         },
         {
             interval: '1m',
             days: '31',
-            tickInterval: 100
         },
         {
             interval: '3m',
             days: '93',
-            tickInterval: 10
         },
         {
             interval: '1y',
             days: '365',
-            tickInterval: 31
         },
         {
             interval: 'max',
             days: 'max',
-            tickInterval: 62
         },
     ]
     
 	return ( 
 		<div css={tw`w-full p-3 hocus:cursor-auto`}>
-            <div css={tw`flex justify-between`}>
+            <div css={tw`flex justify-between cursor-pointer`} onClick={() => openCoin()}>
                 <div>
                     {
                         !chartData ? 
@@ -152,9 +144,9 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                         <CustomSkeleton />
                     : 
                     intervals.map((interval, index) => (
-                        <div css={[tw`text-center hocus:cursor-pointer border border-blue px-2 py-1 rounded mx-5px text-14 font-roboto hocus:bg-light-blue`, css`transition: all 0.3s;`, activeInterval === interval.days ? tw`bg-light-blue` : null]} onClick={() => {
-                            setInterval(interval.days)
-                            setTickInterval(interval.tickInterval)
+                        <div key={index} css={[tw`text-center hocus:cursor-pointer border border-blue px-2 py-1 rounded mx-5px text-14 font-roboto hocus:bg-light-blue`, css`transition: all 0.3s;`, activeIntervalDays === interval.days ? tw`bg-light-blue` : null]} onClick={() => {
+                            setIntervalDays(interval.days)
+                            setInterval(interval.interval)
                         }}>
                             {interval.interval}
                         </div>            
@@ -181,17 +173,14 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                         {
                             responsive: true,
                             tooltips: {
-                                mode: 'index',
+                                mode: 'label',
                                 intersect: false,
                                 backgroundColor: '#FFF',
                                 titleFontColor: 'black',
                                 bodyFontColor: 'black',
                                 callbacks: {
-                                    title: (item) => {
-                                        return moment.unix(parseInt(item[0].label)/1000).format('LLL')
-                                    },
                                     label: (item, data) => {    
-                                        const price = typeof item.yLabel == 'number' ? returnPrice(item.yLabel) : item.yLabel
+                                        const price = typeof item.yLabel == 'number' ? returnPrice(item.yLabel, true) : item.yLabel
                                         
                                         return ' $ ' + price
                                     }
@@ -221,17 +210,16 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                                 ],
                                 xAxes: [
                                     {
+                                        type: 'time',
+                                        time: {
+                                            unit: activeInterval === '24h' ? 'hour' : 'day',
+                                            // unitStepSize: activeInterval === '24h' ? 2 : activeInterval === '7d' ? 1 : activeInterval === '1m' ? 3 : activeInterval === '3m' ? 10 : activeInterval === '1y' ? 22 : 30,
+                                            displayFormats: {
+                                                'day': 'DD MMM YY'
+                                            },
+                                        },
                                         ticks: {
-                                            callback: (value, index, values) => {
-
-                                                if(activeInterval === '1') {
-                                                    return moment(value).format('HH:mm')
-                                                } else if(activeInterval === '7' || activeInterval === '31' || activeInterval === '93') {
-                                                    return moment(value).format('DD MMM YY')
-                                                } else {
-                                                    return moment(value).format('MMM YY')
-                                                }
-                                            }
+                                            maxTicksLimit: activeInterval === '24h' ? 12 : activeInterval === '7d' ? 7 : 15
                                         }
                                     }
                                 ]

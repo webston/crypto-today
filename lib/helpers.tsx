@@ -19,11 +19,17 @@ const DynamicLink = ({href, children, target}): any => {
 }
 
 const PriceChange = (percentage): any => {  
-  return (
-    percentage < 0 ? 
-      <span css={tw`text-red font-medium`}>{percentage.toFixed(2) + ' %'}</span> : 
-      <span css={tw`text-green font-medium`}>{'+' + percentage.toFixed(2) + ' %'}</span>
-  )
+  if(percentage) {
+    return (
+      percentage < 0 ? 
+        <span css={tw`text-red`}>{percentage.toFixed(2) + ' %'}</span> : 
+        <span css={tw`text-green`}>{'+' + percentage.toFixed(2) + ' %'}</span>
+    )
+  } else {
+    return (
+      <span>-</span>
+    )
+  }
 }
 
 export {DynamicLink, PriceChange}

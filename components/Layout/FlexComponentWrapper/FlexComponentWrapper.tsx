@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from "react"
 import tw from 'twin.macro'
 import {css} from "@emotion/core"
-import {MQ} from '../lib/helpers'
 
 type Props = {
 	containerClasses?: any

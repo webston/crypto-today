@@ -20,7 +20,7 @@ const TableItem = tw.td`px-5 py-3 border-b`
 const tableHeadItems = ['#', 'Name', 'Market Cap', 'Current Price', '24h Change', '7d Price Graph']
 
 const CoinsTable: FunctionComponent<Props> = ({coins, error}) => {
-  const [expandedCoin, openCoin] = useState(null)
+  const [expandedCoin, openCoin] = useState(null)  
 
   if(error)  {
     return (<div>There has been an error. Please try again later.</div>)
@@ -34,7 +34,7 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error}) => {
         </thead>
         <tbody>
         { /* Loading Skeleton */
-          !coins ? 
+          !coins || coins.length < 1 ? 
             _.times(10, (index) => {
               return(
                 <tr key={index}>
@@ -61,25 +61,25 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error}) => {
               }
 
               return (
-                <tr css={[tw`border-b w-full hocus:cursor-pointer`, css`transition: all 0.3s; max-height: 100px;`, activeCoin ? css`max-height: 300px;` : tw`hocus:bg-gray-100`]} key={index} onClick={() => {
+                <tr css={[tw`border-b w-full`, css`transition: all 0.3s; max-height: 100px;`, activeCoin ? css`max-height: 300px;` : tw`hocus:bg-gray-100 hocus:cursor-pointer`]} key={index} onClick={() => {
                   !expandedCoin || expandedCoin !== index + 1 ? openCoin(index + 1) : !activeCoin ? openCoin(null) : null
                 }}>
                   <TableItem css={[css`transition: all 0.3s;`, activeCoin ? tw`bg-gray-100` : null, activeCoin ? css`max-height: 200px;` : css`max-height: 100px`]} colSpan={activeCoin ? 6 : null}>
                     {
-                      activeCoin ? (
-                        <ExpandedCoin id={coin.id} image={coin.image} symbol={coin.symbol} name={coin.name} marketCap={coin.market_cap} currentPrice={coin.current_price} dayChange={coin.price_change_percentage_24h} />
+                      activeCoin && coin ? (
+                        <ExpandedCoin id={coin.id} openCoin={openCoin} image={coin.image} symbol={coin.symbol} name={coin.name} marketCap={coin.market_cap} currentPrice={coin.current_price} dayChange={coin.price_change_percentage_24h} />
                       ) : index + 1
                     }
                   </TableItem>
 
                   {
-                    !activeCoin ? (
+                    !activeCoin && coin ? (
                       <>
                         <TableItem>
                           <CoinIdentity image={coin.image} symbol={coin.symbol} name={coin.name} />
                         </TableItem>
                         <TableItem>
-                          $ {coin.market_cap.toLocaleString()}
+                          $ {coin.market_cap ? coin.market_cap.toLocaleString() : null}
                         </TableItem>
                         <TableItem>
                           $ {coin.current_price}
@@ -90,9 +90,11 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error}) => {
                           }
                         </TableItem>
                         <TableItem>
-                          <Sparklines data={coin.sparkline_in_7d.price} width={100} height={40}>
-                            <SparklinesLine style={{fill: process.env.LIGHT_BLUE, strokeWidth: 1, stroke: '#1771F1'}} />
-                          </Sparklines>
+                          <div css={[tw`h-40px`, css`svg {height: 40px;}`]}>
+                            <Sparklines data={coin.sparkline_in_7d.price} width={100} height={40}>
+                              <SparklinesLine style={{fill: process.env.LIGHT_BLUE, strokeWidth: 1, stroke: '#1771F1'}} />
+                            </Sparklines>
+                          </div>
                         </TableItem>
                       </>
                     ) : null
