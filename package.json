@@ -9,9 +9,6 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-export-default-from": "^7.8.3",
-    "@bit/bit.envs.compilers.babel": "^7.0.4",
-    "@bit/kencookco.envs.compilers.nextjs": "^9.0.0",
-    "@bit/webston.web-ui.layout": "^1.0.7",
     "@fnando/sparkline": "^0.3.10",
     "@types/chart.js": "^2.9.20",
     "chart.js": "^2.9.3",
@@ -24,7 +21,6 @@
     "next": "9.3.5",
     "next-seo": "^4.4.0",
     "next-transpile-modules": "^3.3.0",
-    "quick.db": "^7.1.1",
     "react": "16.13.1",
     "react-chartjs-2": "^2.9.0",
     "react-debounce-input": "^3.2.2",
@@ -36,7 +32,6 @@
     "react-spinners": "^0.8.3",
     "react-spring": "^8.0.27",
     "react-table": "^7.0.4",
-    "recharts": "^1.8.5",
     "swr": "^0.2.0",
     "url-parse": "^1.4.7"
   },
