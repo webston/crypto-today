@@ -136,6 +136,7 @@ module.exports = {
                 '40px': '40px'
             },
             lineHeight: {
+                '1': '1',
                 '1.2': '1.2'
             },
             padding: {

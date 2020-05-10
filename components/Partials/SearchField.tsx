@@ -6,12 +6,13 @@ import {DebounceInput} from 'react-debounce-input';
 import {BsSearch} from 'react-icons/bs'
 
 type Props = {
-    searchFor: any
+    searchFor: any,
+    containerClasses?: any
 }
 
-const SearchField: FunctionComponent<Props> = ({searchFor}) => {
+const SearchField: FunctionComponent<Props> = ({searchFor, containerClasses}) => {
     return (
-        <div css={tw`inline-block max-w-300 w-full`}>
+        <div css={[tw`inline-block max-w-300 w-full`, containerClasses]}>
             <form css={tw`inline-block w-full`}>
                 <div css={tw`float-left relative w-full`}> 
                     <DebounceInput

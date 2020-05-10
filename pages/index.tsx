@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState, useEffect } from "react"
 import useSWR from 'swr'
 import fetch from '../lib/fetch'
 import tw from 'twin.macro'
-import {H1, Paragraph} from '../components/Typography'
+import {H1, Paragraph, Logo} from '../components/Typography'
 import {DynamicLink} from '../lib/helpers'
 import {FlexContainer} from '../components/Layout/FlexContainer'
 import {FlexColumn} from '../components/Layout/FlexColumn'
@@ -74,8 +74,9 @@ const Home: FunctionComponent<Props> = () => {
   return (
     <Container css={tw`pb-30px smd:pb-100px`}>
       <FlexContainer containerClasses={tw`flex justify-center`}>
-        <FlexColumn containerClasses={tw`w-full pt-30px pb-30px smd:pb-60px text-right`}>
-          <SearchField searchFor={searchFor} />
+        <FlexColumn containerClasses={tw`w-full pt-30px pb-30px smd:pb-60px smd:flex smd:justify-between text-center smd:text-left`}>
+          <Logo css={tw`w-full smd:w-auto mb-40px smd:mb-0`}>TopCryptos.<span css={tw`text-blue`}>today</span></Logo>
+          <SearchField searchFor={searchFor} containerClasses={tw`w-full smd:w-auto`} />
         </FlexColumn>
         <FlexColumn containerClasses={tw`w-full text-center flex justify-center`}>
           <H1 css={tw`mb-40px smd:mb-80px max-w-700`}>Top cryptocurrencies by market capitalization</H1>
