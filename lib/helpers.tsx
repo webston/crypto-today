@@ -4,6 +4,7 @@ import isExternal from 'is-url-external';
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import Url from 'url-parse'
+import fetch from '../lib/fetch'
 
 
 const DynamicLink = ({href, children, target}): any => {
@@ -32,4 +33,24 @@ const PriceChange = (percentage): any => {
   }
 }
 
-export {DynamicLink, PriceChange}
+const fetchCoins = (currentPage, setLoading, setCoins, setSearching, setError, ids, clean) => {
+  setLoading(true)
+
+  let searchIds
+
+  if(ids) {
+    searchIds = '&ids=' + ids
+  }
+  
+  fetch(`${process.env.API_URL}coins/markets?vs_currency=usd&${searchIds}order=market_cap_desc&per_page=50&page=${currentPage}&sparkline=true`).then(response => {     
+    if(Array.isArray(response) && response.length > 0) {
+      setSearching(false); setLoading(false); setCoins(prevCoins => {
+        return ids || (!ids && clean) ? response : [...prevCoins, ...response]
+      })
+    } else {
+      setError(true)
+    }
+  })
+}
+
+export {DynamicLink, PriceChange, fetchCoins}

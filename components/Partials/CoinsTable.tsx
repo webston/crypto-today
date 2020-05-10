@@ -11,7 +11,9 @@ import { Sparklines, SparklinesLine } from 'react-sparklines';
 
 type Props = {
   coins: any,
-  error: any
+  error: any,
+  loading: boolean,
+  searching: boolean
 }
 
 const TableHeading = tw.th`px-5 py-3 border-b`
@@ -19,7 +21,7 @@ const TableItem = tw.td`px-5 py-3 border-b`
 
 const tableHeadItems = ['#', 'Name', 'Market Cap', 'Current Price', '24h Change', '7d Price Graph']
 
-const CoinsTable: FunctionComponent<Props> = ({coins, error}) => {
+const CoinsTable: FunctionComponent<Props> = ({coins, error, loading, searching}) => {
   const [expandedCoin, openCoin] = useState(null)  
 
   if(error)  {
@@ -34,7 +36,7 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error}) => {
         </thead>
         <tbody>
         { /* Loading Skeleton */
-          !coins || coins.length < 1 ? 
+          searching || loading && !coins || coins.length < 1 ? 
             _.times(10, (index) => {
               return(
                 <tr key={index}>
