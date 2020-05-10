@@ -76,7 +76,7 @@ const Home: FunctionComponent<Props> = () => {
       <FlexContainer containerClasses={tw`flex justify-center`}>
         <FlexColumn containerClasses={tw`w-full pt-30px pb-30px smd:pb-60px smd:flex smd:justify-between text-center smd:text-left`}>
           <Logo css={tw`w-full smd:w-auto mb-40px smd:mb-0`}>TopCryptos.<span css={tw`text-blue`}>today</span></Logo>
-          <SearchField searchFor={searchFor} containerClasses={tw`w-full smd:w-auto`} />
+          <SearchField searchFor={searchFor} containerClasses={tw`w-full`} />
         </FlexColumn>
         <FlexColumn containerClasses={tw`w-full text-center flex justify-center`}>
           <H1 css={tw`mb-40px smd:mb-80px max-w-700`}>Top cryptocurrencies by market capitalization</H1>

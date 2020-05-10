@@ -14,9 +14,12 @@ const SearchField: FunctionComponent<Props> = ({searchFor, containerClasses}) =>
     return (
         <div css={[tw`inline-block max-w-300 w-full`, containerClasses]}>
             <form css={tw`inline-block w-full`}>
-                <div css={tw`float-left relative w-full`}> 
+                <div css={[tw`float-left relative w-full`, css`
+                &:hover input, input:focus, input:active {
+                    box-shadow: none; outline: none !important; border: 1px solid ${process.env.BLUE}
+                }`]}> 
                     <DebounceInput
-                        css={[tw`hocus:shadow-none hocus:outline-none hocus:border-blue font-roboto text-14 smd:text-16 border border-gray-300 rounded-full pl-3 pr-40px py-8px max-w-300 w-full`, css`transition: all 0.3s;`]}
+                        css={[tw`font-roboto text-14 smd:text-16 border border-gray-300 rounded-full pl-3 pr-40px py-8px max-w-300 w-full`, css`transition: all 0.3s;`]}
                         minLength={2}
                         placeholder={"Search by coin ID or name"}
                         debounceTimeout={400}
