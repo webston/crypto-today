@@ -7,7 +7,7 @@ type Props = {
 }
 
 const FlexColumn: FunctionComponent<Props> = ({containerClasses, children}) => {
-	let initialStyles = tw`px-20px`;
+	let initialStyles = tw`px-15px smd:px-20px`;
 	
 	return (
 		<div css={css`${initialStyles} ${containerClasses}`}>

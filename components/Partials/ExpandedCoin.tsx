@@ -9,6 +9,7 @@ import fetch from '../../lib/fetch'
 import Skeleton from "react-loading-skeleton"
 import { Line } from 'react-chartjs-2';
 import _ from 'lodash'
+import {useSpring, animated} from 'react-spring'
 
 type Props = {
     id: string,
@@ -23,7 +24,7 @@ type Props = {
 
 const CustomSkeleton = () => {
     return (
-        <div css={tw`py-12px`}>
+        <div css={tw`smd:py-12px`}>
             <Skeleton width={100}/>
         </div>
     )
@@ -37,6 +38,8 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
     const [activeIntervalDays, setIntervalDays] = useState('1')
 
     let coin = useSWR(activeIntervalDays ? `${process.env.API_URL}coins/${id}/market_chart?vs_currency=usd&days=${activeIntervalDays}` : null, fetch) 
+
+    const springProps = useSpring({opacity: 1, from: {opacity: 0}})
 
     useEffect(() => {
         if(coin && coin.data) {
@@ -92,16 +95,20 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
     ]
     
 	return ( 
-		<div css={tw`w-full p-3 hocus:cursor-auto`}>
-            <div css={tw`flex justify-between cursor-pointer`} onClick={() => openCoin()}>
-                <div>
+		<animated.div css={tw`w-full smd:p-3 hocus:cursor-auto`} style={springProps}>
+            <div css={tw`flex flex-wrap smd:justify-between cursor-pointer`} onClick={(el) => {
+                console.log(el)
+                
+                return openCoin()
+                }}>
+                <div css={tw`w-1/2 mb-15px smd:mb-0 smd:w-auto`}>
                     {
                         !chartData ? 
                             <CustomSkeleton />
                         : <CoinIdentity image={image} symbol={symbol} name={name} />
                     }
                 </div>
-                <div>
+                <div css={tw`w-1/2 mb-15px smd:mb-0 smd:w-auto`}>
                     {
                         !chartData ? 
                             <CustomSkeleton />
@@ -113,7 +120,7 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                         )
                     }
                 </div>
-                <div>
+                <div css={tw`w-1/2 smd:w-auto`}>
                     {
                         !chartData ? 
                             <CustomSkeleton />
@@ -125,7 +132,7 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                         )
                     }
                 </div>
-                <div>
+                <div css={tw`w-1/2 smd:w-auto`}>
                     {
                         !chartData ? 
                             <CustomSkeleton />
@@ -138,13 +145,13 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                     }
                 </div>
             </div>
-            <div css={tw`flex w-full mt-50px`}>
+            <div css={tw`flex w-full mt-30px smd:mt-50px`}>
                 {
                     !chartData ? 
                         <CustomSkeleton />
                     : 
                     intervals.map((interval, index) => (
-                        <div key={index} css={[tw`text-center hocus:cursor-pointer border border-blue px-2 py-1 rounded mx-5px text-14 font-roboto hocus:bg-light-blue`, css`transition: all 0.3s;`, activeIntervalDays === interval.days ? tw`bg-light-blue` : null]} onClick={() => {
+                        <div key={index} css={[tw`text-center hocus:cursor-pointer border border-blue px-2 py-1 rounded mx-5px text-12 smd:text-14 font-roboto hocus:bg-light-blue`, css`transition: all 0.3s;`, activeIntervalDays === interval.days ? tw`bg-light-blue` : null]} onClick={() => {
                             setIntervalDays(interval.days)
                             setInterval(interval.interval)
                         }}>
@@ -229,7 +236,7 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                 ) : <CustomSkeleton />
             }
             </div>
-        </div>
+        </animated.div>
 	)
 }
 

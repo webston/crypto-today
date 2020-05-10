@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState, useEffect } from "react"
 import useSWR from 'swr'
 import fetch from '../lib/fetch'
 import tw from 'twin.macro'
-import {Paragraph} from '../components/Typography'
+import {H1, Paragraph} from '../components/Typography'
 import {DynamicLink} from '../lib/helpers'
 import {FlexContainer} from '../components/Layout/FlexContainer'
 import {FlexColumn} from '../components/Layout/FlexColumn'
@@ -23,6 +23,8 @@ const Home: FunctionComponent<Props> = () => {
   const [loading, setLoading] = useState(false)
   const [searching, setSearching] = useState(false)
   const [error, setError] = useState(false)
+  const [searchedIds, setSearchedIds] = useState(false)
+  const [hasMoreResults, setHasMoreresults] = useState(false)
 
   const searchFor = (val) => {
     const foundCoinsArr = []
@@ -38,22 +40,26 @@ const Home: FunctionComponent<Props> = () => {
     if(foundCoinsArr.length > 0) {
       foundCoins = foundCoinsArr.join()
     }
-
+    
     if(val && val !== '') {
       //Search for input coins
       setSearching(true)
-      fetchCoins(1, setLoading, setCoins, setSearching, setError, foundCoins, true)
+      setSearchedIds(foundCoins)
+      
+      fetchCoins(1, setLoading, setCoins, setSearching, setError, foundCoins, true, searchedIds, setHasMoreresults, hasMoreResults)
     } else {
       //Fetch all coins
-      fetchCoins(1, setLoading, setCoins, setSearching, setError, false, true)
+      setSearchedIds(false)
+      fetchCoins(1, setLoading, setCoins, setSearching, setError, false, true, false, setHasMoreresults, hasMoreResults)
       setSearching(true)
       setCurrentPage(1)
     }
   }
   
-  useEffect(() => {
+  useEffect(() => { //On page load
     setLoading(true)
-    fetchCoins(currentPage, setLoading, setCoins, setSearching, setError, false, false)
+
+    fetchCoins(currentPage, setLoading, setCoins, setSearching, setError, false, false, searchedIds, setHasMoreresults, hasMoreResults)
   }, [currentPage])
 
   useEffect(() => {
@@ -66,10 +72,13 @@ const Home: FunctionComponent<Props> = () => {
   
   
   return (
-    <Container css={tw`py-100px`}>
+    <Container css={tw`pb-30px smd:pb-100px`}>
       <FlexContainer containerClasses={tw`flex justify-center`}>
-        <FlexColumn>
+        <FlexColumn containerClasses={tw`w-full pt-30px pb-30px smd:pb-60px text-right`}>
           <SearchField searchFor={searchFor} />
+        </FlexColumn>
+        <FlexColumn containerClasses={tw`w-full text-center flex justify-center`}>
+          <H1 css={tw`mb-40px smd:mb-80px max-w-700`}>Top cryptocurrencies by market capitalization</H1>
         </FlexColumn>
         {
           !error ? (
@@ -80,16 +89,20 @@ const Home: FunctionComponent<Props> = () => {
             </FlexColumn>
           ) : null
         }
-        <FlexColumn containerClasses={tw`flex flex-wrap justify-center w-full`}>
+        <FlexColumn containerClasses={tw`flex flex-wrap justify-center w-full px-0 smd:px-15px`}>
           {
             <CoinsTable coins={coins} error={error} loading={loading} searching={searching}/>
           }
         </FlexColumn>
-        <FlexColumn containerClasses={tw`flex justify-center mt-30px`}>
-          <Button label="Load More" noHref loading={loading ? true : false} onClick={() => {
-            setCurrentPage(prevPage => prevPage + 1)            
-          }} />
-        </FlexColumn>
+        {
+          hasMoreResults ? (
+            <FlexColumn containerClasses={tw`flex justify-center mt-30px`}>
+              <Button label="Load More" noHref loading={loading ? true : false} onClick={() => {
+                setCurrentPage(prevPage => prevPage + 1)            
+              }} />
+            </FlexColumn>
+          ) : null
+        }
       </FlexContainer>
     </Container>
   )

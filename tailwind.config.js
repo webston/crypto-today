@@ -3,7 +3,14 @@ const plugin = require('tailwindcss/plugin')
 module.exports = {
     theme: {
         fontFamily: {
+            'titles': ['halyard-display', 'sans-serif'],
             'roboto': ['Roboto', 'sans-serif'],
+        },
+        screens: {
+            sm: '480px',
+            smd: '620px',
+            md: '870px',
+            lg: '1024px',
         },
         container: {
             padding: '2rem'
@@ -39,6 +46,12 @@ module.exports = {
             '110': '6.875rem',
         },
         extend: {
+            inset: {
+                '8px' : '8px',
+                '12px' : '12px',
+                '16px' : '16px',
+                '20px' : '20px'
+            },
             colors: {
                 'green': '#00CF91',
                 'blue': '#1771F1',
@@ -48,6 +61,7 @@ module.exports = {
                 'red': '#FF6A61'
             },
             maxWidth: {
+                '300': '300px',
                 '600': '600px',
                 '700': '700px',
                 '900': '900px',
@@ -66,6 +80,8 @@ module.exports = {
                 '98px': '98px',
                 '116px': '116px',
                 '150px': '150px',
+                '200px': '200px',
+                '300px': '300px',
                 '330px': '330px'
             },
             margin: {
@@ -119,6 +135,9 @@ module.exports = {
             height: {
                 '40px': '40px'
             },
+            lineHeight: {
+                '1.2': '1.2'
+            },
             padding: {
                 '4px': '4px',
                 '6px': '6px',
@@ -151,6 +170,7 @@ module.exports = {
                 '40px': '40px',
                 '46px': '46px',
                 '50px': '50px',
+                '60px': '60px',
                 '70px': '70px',
                 '72px': '72px',
                 '83px': '83px',

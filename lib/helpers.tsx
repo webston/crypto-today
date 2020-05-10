@@ -26,29 +26,37 @@ const PriceChange = (percentage): any => {
         <span css={tw`text-red`}>{percentage.toFixed(2) + ' %'}</span> : 
         <span css={tw`text-green`}>{'+' + percentage.toFixed(2) + ' %'}</span>
     )
-  } else {
-    return (
-      <span>-</span>
-    )
   }
 }
 
-const fetchCoins = (currentPage, setLoading, setCoins, setSearching, setError, ids, clean) => {
+const fetchCoins = (currentPage, setLoading, setCoins, setSearching, setError, ids, clean, searchedIds, setHasMoreResults, hasMoreResults) => {
   setLoading(true)
 
-  let searchIds
+  let searchIds = ''
 
-  if(ids) {
+  if(ids || searchedIds) {
     searchIds = '&ids=' + ids
+
+    if(!ids) {
+      searchIds = '&ids=' + searchedIds
+    }
   }
   
-  fetch(`${process.env.API_URL}coins/markets?vs_currency=usd&${searchIds}order=market_cap_desc&per_page=50&page=${currentPage}&sparkline=true`).then(response => {     
+  fetch(`${process.env.API_URL}coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&sparkline=true&page=${currentPage}${searchIds}`).then(response => {     
     if(Array.isArray(response) && response.length > 0) {
       setSearching(false); setLoading(false); setCoins(prevCoins => {
         return ids || (!ids && clean) ? response : [...prevCoins, ...response]
       })
     } else {
       setError(true)
+    }
+  })
+
+  fetch(`${process.env.API_URL}coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&sparkline=true&page=${currentPage + 1}${searchIds}`).then(response => {
+    if(Array.isArray(response) && response.length > 0) {
+      setHasMoreResults(true)
+    } else {
+      setHasMoreResults(false)
     }
   })
 }
