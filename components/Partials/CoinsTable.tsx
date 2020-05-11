@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent, useState, useEffect, useRef } from 'react'
 import tw from 'twin.macro'
 import {css} from '@emotion/core'
 import Skeleton from 'react-loading-skeleton';
@@ -7,8 +7,26 @@ import { ExpandedCoin } from './ExpandedCoin';
 import { CoinIdentity } from './CoinIdentity';
 import { PriceChange } from '../../lib/helpers';
 import { Sparklines, SparklinesLine } from 'react-sparklines';
+import Scroll from 'react-scroll';
+import { motion } from 'framer-motion';
 
-import * as Scroll from 'react-scroll';
+const scroller = Scroll.scroller
+const Element = Scroll.Element
+
+const scrollToRef = (ref) => {  
+
+  console.log(ref)
+  
+  let scroll = Scroll.animateScroll
+
+  if(ref && ref.current) {
+    scroller.scrollTo('test1', {
+      duration: 500,
+      smooth: true,
+      offset: -10
+    })
+  }
+}
 
 
 type Props = {
@@ -25,6 +43,9 @@ const tableHeadItems = ['#', 'Name', 'Market Cap', 'Current Price', '24h Change'
 
 const CoinsTable: FunctionComponent<Props> = ({coins, error, loading, searching}) => {
   const [expandedCoin, openCoin] = useState(null)  
+
+  const myRef = useRef(null)
+  const executeScroll = () => scrollToRef(myRef)
 
   if(error)  {
     return (<div>There has been an error. Please try again later.</div>)
@@ -78,7 +99,13 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error, loading, searching}
 
               return (
                 <tr css={[tw`border-b w-full`, css`transition: all 0.3s; max-height: 100px;`, activeCoin ? css`max-height: 300px;` : tw`hocus:bg-gray-100 hocus:cursor-pointer`]} key={index} onClick={() => {
-                  return (!expandedCoin || expandedCoin !== index + 1 ? openCoin(index + 1) : !activeCoin ? openCoin(null) : null)
+                  if(!expandedCoin || expandedCoin !== index + 1) {
+                    openCoin(index + 1)
+
+                    setTimeout(() => {executeScroll()}, 500)
+                  } else if(!activeCoin) {
+                    openCoin(null)
+                  } 
                 }}>
                   <TableItem css={[
                       css`transition: all 0.3s;`, 
@@ -86,15 +113,20 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error, loading, searching}
                     ]} colSpan={activeCoin ? 6 : null}>
                     {
                       activeCoin && coin ? (
-                        <ExpandedCoin 
-                          id={coin.id} 
-                          openCoin={openCoin} 
-                          image={coin.image} 
-                          symbol={coin.symbol} 
-                          name={coin.name} 
-                          marketCap={coin.market_cap} 
-                          currentPrice={coin.current_price} 
-                          dayChange={coin.price_change_percentage_24h} />
+                        <motion.div initial={{ opacity: 0}} animate={{ opacity: 1}}>
+                          <Element name="test1" className="element"></Element>
+                          <div ref={myRef}>
+                            <ExpandedCoin 
+                            id={coin.id} 
+                            openCoin={openCoin} 
+                            image={coin.image} 
+                            symbol={coin.symbol} 
+                            name={coin.name} 
+                            marketCap={coin.market_cap} 
+                            currentPrice={coin.current_price} 
+                            dayChange={coin.price_change_percentage_24h} />
+                          </div>
+                        </motion.div>
                       ) : index + 1
                     }
                   </TableItem>

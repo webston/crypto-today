@@ -12,8 +12,6 @@ import _ from 'lodash'
 import {useSpring, animated} from 'react-spring'
 import Scroll from 'react-scroll'
 
-const Element = Scroll.Element
-
 type Props = {
     id: string,
     image: string,
@@ -46,8 +44,6 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
     const [activeIntervalDays, setIntervalDays] = useState('1')
 
     let coin = useSWR(activeIntervalDays ? `${process.env.API_URL}coins/${id}/market_chart?vs_currency=usd&days=${activeIntervalDays}` : null, fetch) 
-
-    const springProps = useSpring({opacity: 1, from: {opacity: 0}})
 
     useEffect(() => {
         if(coin && coin.data) {
@@ -103,7 +99,7 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
     ]
     
 	return ( 
-		<animated.div css={tw`w-full smd:p-3 hocus:cursor-auto`} style={springProps}>
+		<div css={tw`w-full smd:p-3 hocus:cursor-auto overflow-hidden`}>
             <div css={tw`flex flex-wrap smd:justify-between cursor-pointer`} onClick={(el) => {
                 return openCoin()
                 }}>
@@ -242,7 +238,7 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                 ) : <CustomSkeleton skeletonWidth={'100%'} skeletonHeight={'38.33vw'} />
             }
             </div>
-        </animated.div>
+        </div>
 	)
 }
 
