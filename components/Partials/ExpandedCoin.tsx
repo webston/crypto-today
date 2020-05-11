@@ -9,8 +9,6 @@ import fetch from '../../lib/fetch'
 import Skeleton from "react-loading-skeleton"
 import { Line } from 'react-chartjs-2';
 import _ from 'lodash'
-import {useSpring, animated} from 'react-spring'
-import Scroll from 'react-scroll'
 
 type Props = {
     id: string,
