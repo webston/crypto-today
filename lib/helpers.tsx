@@ -19,6 +19,12 @@ const DynamicLink = ({href, children, target}): any => {
     )
 }
 
+const Breakpoints = ['480px', '620px', '870px', '1024px']
+
+const MQ = Breakpoints.map(
+	bp => `@media (min-width: ${bp})`
+)
+
 const PriceChange = (percentage): any => {  
   if(percentage) {
     return (
@@ -61,4 +67,4 @@ const fetchCoins = (currentPage, setLoading, setCoins, setSearching, setError, i
   })
 }
 
-export {DynamicLink, PriceChange, fetchCoins}
+export {DynamicLink, MQ, PriceChange, fetchCoins}

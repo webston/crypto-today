@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react"
-import { DynamicLink } from "../../lib/helpers"
+import { DynamicLink, MQ } from "../../lib/helpers"
 import tw from "twin.macro"
 import { css } from "@emotion/core"
 import BeatLoader from  "react-spinners/BeatLoader"
@@ -13,7 +13,7 @@ type Props = {
 }
 
 const Button: FunctionComponent<Props> = ({onClick, noHref, children, label, loading}) => {
-    const buttonStyle = [tw`rounded bg-blue hocus:cursor-pointer text-14 smd:text-16 px-4 py-3 font-roboto hocus:bg-opacity-blue text-white`, css`transition: all 0.3s; > div {display: flex; justify-content: center; padding-top: 5px; padding-bottom: 5px;}`]
+    const buttonStyle = [tw`rounded bg-blue hocus:cursor-pointer text-14 smd:text-16 px-4 py-3 font-roboto hocus:bg-opacity-blue text-white`, css`transition: all 0.3s; > div {display: flex; justify-content: center; padding-top: 3px; padding-bottom: 3px; ${MQ[2]} {padding-top: 5px; padding-bottom: 5px;}}`]
 
     if(noHref) {
         return (

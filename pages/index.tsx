@@ -72,7 +72,7 @@ const Home: FunctionComponent<Props> = () => {
   
   
   return (
-    <Container css={tw`pb-30px smd:pb-100px`}>
+    <Container css={tw`pb-50px smd:pb-100px`}>
       <FlexContainer containerClasses={tw`flex justify-center`}>
         <FlexColumn containerClasses={tw`w-full pt-30px pb-30px smd:pb-60px smd:flex smd:justify-between text-center smd:text-left`}>
           <Logo css={tw`w-full smd:w-auto mb-40px smd:mb-0`}>TopCryptos.<span css={tw`text-blue`}>today</span></Logo>
