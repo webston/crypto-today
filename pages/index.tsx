@@ -12,6 +12,7 @@ import { Button } from "../components/Partials/Buttons"
 import _ from 'lodash'
 import { SearchField } from "../components/Partials/SearchField"
 import {fetchCoins} from "../lib/helpers"
+import { Footer } from "../components/Partials/Footer"
 
 type Props = {}
 
@@ -72,7 +73,7 @@ const Home: FunctionComponent<Props> = () => {
   
   
   return (
-    <Container css={tw`pb-50px smd:pb-100px`}>
+    <Container css={tw`pb-30px`}>
       <FlexContainer containerClasses={tw`flex justify-center`}>
         <FlexColumn containerClasses={tw`w-full pt-30px pb-30px smd:pb-60px smd:flex smd:justify-between text-center smd:text-left`}>
           <Logo css={tw`w-full smd:w-auto mb-40px smd:mb-0`}>TopCryptos.<span css={tw`text-blue`}>today</span></Logo>
@@ -105,6 +106,7 @@ const Home: FunctionComponent<Props> = () => {
           ) : null
         }
       </FlexContainer>
+      <Footer />
     </Container>
   )
 }

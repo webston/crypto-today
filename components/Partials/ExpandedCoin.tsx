@@ -10,6 +10,9 @@ import Skeleton from "react-loading-skeleton"
 import { Line } from 'react-chartjs-2';
 import _ from 'lodash'
 import {useSpring, animated} from 'react-spring'
+import Scroll from 'react-scroll'
+
+const Element = Scroll.Element
 
 type Props = {
     id: string,
@@ -22,10 +25,15 @@ type Props = {
     openCoin: any
 }
 
-const CustomSkeleton = () => {
+type CustomSkeletonProps = {
+    skeletonWidth?: any,
+    skeletonHeight?: any
+}
+
+const CustomSkeleton: FunctionComponent<CustomSkeletonProps> = ({skeletonWidth, skeletonHeight}) => {
     return (
-        <div css={tw`smd:py-12px`}>
-            <Skeleton width={100}/>
+        <div css={[tw`smd:py-12px`, css`max-height: 555px; height: ${skeletonHeight}`]}>
+            <Skeleton width={skeletonWidth ? skeletonWidth : 100} height={skeletonHeight ? '100%' : null} />
         </div>
     )
 }
@@ -97,8 +105,6 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
 	return ( 
 		<animated.div css={tw`w-full smd:p-3 hocus:cursor-auto`} style={springProps}>
             <div css={tw`flex flex-wrap smd:justify-between cursor-pointer`} onClick={(el) => {
-                console.log(el)
-                
                 return openCoin()
                 }}>
                 <div css={tw`w-1/2 mb-15px smd:mb-0 smd:w-auto`}>
@@ -233,7 +239,7 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                             }
                         }
                     }/>
-                ) : <CustomSkeleton />
+                ) : <CustomSkeleton skeletonWidth={'100%'} skeletonHeight={'38.33vw'} />
             }
             </div>
         </animated.div>

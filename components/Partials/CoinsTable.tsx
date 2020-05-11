@@ -8,6 +8,9 @@ import { CoinIdentity } from './CoinIdentity';
 import { PriceChange } from '../../lib/helpers';
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 
+import * as Scroll from 'react-scroll';
+
+
 type Props = {
   coins: any,
   error: any,
@@ -75,7 +78,7 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error, loading, searching}
 
               return (
                 <tr css={[tw`border-b w-full`, css`transition: all 0.3s; max-height: 100px;`, activeCoin ? css`max-height: 300px;` : tw`hocus:bg-gray-100 hocus:cursor-pointer`]} key={index} onClick={() => {
-                  !expandedCoin || expandedCoin !== index + 1 ? openCoin(index + 1) : !activeCoin ? openCoin(null) : null
+                  return (!expandedCoin || expandedCoin !== index + 1 ? openCoin(index + 1) : !activeCoin ? openCoin(null) : null)
                 }}>
                   <TableItem css={[
                       css`transition: all 0.3s;`, 
