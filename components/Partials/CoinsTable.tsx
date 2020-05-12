@@ -47,7 +47,7 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error, loading, searching}
   
   useEffect(() => {
     openCoin([])
-  }, [coins])
+  }, [searching])
 
   if(error)  {
     return (<div>There has been an error. Please try again later.</div>)
