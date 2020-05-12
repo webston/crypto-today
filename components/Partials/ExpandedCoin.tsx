@@ -18,7 +18,8 @@ type Props = {
     marketCap: number,
     currentPrice: number,
     dayChange: number,
-    openCoin: any
+    openCoin: any,
+    coinIndex: number
 }
 
 type CustomSkeletonProps = {
@@ -34,7 +35,7 @@ const CustomSkeleton: FunctionComponent<CustomSkeletonProps> = ({skeletonWidth, 
     )
 }
 
-const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, marketCap, currentPrice, dayChange, openCoin}) => {
+const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, marketCap, currentPrice, dayChange, openCoin, coinIndex}) => {
     const [chartData, setChartData] = useState()
     const [coinPrices, setCoinPrices] = useState([])
     const [coinDates, setCoinDates] = useState([])
@@ -99,7 +100,7 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
 	return ( 
 		<div css={tw`w-full smd:p-3 hocus:cursor-auto overflow-hidden`}>
             <div css={tw`flex flex-wrap smd:justify-between cursor-pointer`} onClick={(el) => {
-                return openCoin()
+                return openCoin(prevCoins => _.filter(prevCoins, coin => coin !== coinIndex))
                 }}>
                 <div css={tw`w-1/2 mb-15px smd:mb-0 smd:w-auto`}>
                     {

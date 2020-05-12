@@ -7,7 +7,7 @@ const App = ({ Component, pageProps }) => {
     return (
         <>
             <NextSeo
-                title={'Top Cryptos Today'}
+                title={'Top Cryptocurrencies Today'}
             />
             <Component {...pageProps} />
         </>

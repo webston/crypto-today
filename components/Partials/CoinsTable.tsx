@@ -9,6 +9,7 @@ import { PriceChange } from '../../lib/helpers';
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 import Scroll from 'react-scroll';
 import { motion } from 'framer-motion';
+import TrackVisibility from 'react-on-screen'
 
 const scroller = Scroll.scroller
 const Element = Scroll.Element
@@ -20,7 +21,7 @@ const scrollToRef = (ref) => {
   let scroll = Scroll.animateScroll
 
   if(ref && ref.current) {
-    scroller.scrollTo('test1', {
+    scroller.scrollTo('coinData', {
       duration: 500,
       smooth: true,
       offset: -10
@@ -42,10 +43,11 @@ const TableItem = tw.td`px-3 smd:px-4 lg:px-5 py-3 border-b text-14 smd:text-16`
 const tableHeadItems = ['#', 'Name', 'Market Cap', 'Current Price', '24h Change', '7d Price Graph']
 
 const CoinsTable: FunctionComponent<Props> = ({coins, error, loading, searching}) => {
-  const [expandedCoin, openCoin] = useState(null)  
-
-  const myRef = useRef(null)
-  const executeScroll = () => scrollToRef(myRef)
+  const [expandedCoins, openCoin] = useState([])  
+  
+  useEffect(() => {
+    openCoin([])
+  }, [coins])
 
   if(error)  {
     return (<div>There has been an error. Please try again later.</div>)
@@ -93,19 +95,19 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error, loading, searching}
             coins.map((coin, index) => {              
               let activeCoin = false 
 
-              if(expandedCoin === index + 1) {
+              let currentCoinIndex = coin.symbol 
+                
+              if(expandedCoins && expandedCoins.length > 0 && expandedCoins.includes(currentCoinIndex)) {
                 activeCoin = true
               }
-
+              
               return (
                 <tr css={[tw`border-b w-full`, css`transition: all 0.3s; max-height: 100px;`, activeCoin ? css`max-height: 300px;` : tw`hocus:bg-gray-100 hocus:cursor-pointer`]} key={index} onClick={() => {
-                  if(!expandedCoin || expandedCoin !== index + 1) {
-                    openCoin(index + 1)
-
-                    setTimeout(() => {executeScroll()}, 500)
-                  } else if(!activeCoin) {
-                    openCoin(null)
-                  } 
+                  if(expandedCoins && !expandedCoins.includes(currentCoinIndex)) {
+                    openCoin(prevCoins => [...prevCoins, currentCoinIndex])
+                    
+                    // setTimeout(() => {executeScroll()}, 500)
+                  }
                 }}>
                   <TableItem css={[
                       css`transition: all 0.3s;`, 
@@ -114,8 +116,8 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error, loading, searching}
                     {
                       activeCoin && coin ? (
                         <motion.div initial={{ opacity: 0}} animate={{ opacity: 1}}>
-                          <Element name="test1" className="element"></Element>
-                          <div ref={myRef}>
+                          <Element name="coinData" className="element"></Element>
+                          <div>
                             <ExpandedCoin 
                             id={coin.id} 
                             openCoin={openCoin} 
@@ -124,7 +126,9 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error, loading, searching}
                             name={coin.name} 
                             marketCap={coin.market_cap} 
                             currentPrice={coin.current_price} 
-                            dayChange={coin.price_change_percentage_24h} />
+                            dayChange={coin.price_change_percentage_24h} 
+                            coinIndex={currentCoinIndex}
+                            />
                           </div>
                         </motion.div>
                       ) : index + 1
