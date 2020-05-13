@@ -7,28 +7,7 @@ import { ExpandedCoin } from './ExpandedCoin';
 import { CoinIdentity } from './CoinIdentity';
 import { PriceChange } from '../../lib/helpers';
 import { Sparklines, SparklinesLine } from 'react-sparklines';
-import Scroll from 'react-scroll';
 import { motion } from 'framer-motion';
-import TrackVisibility from 'react-on-screen'
-
-const scroller = Scroll.scroller
-const Element = Scroll.Element
-
-const scrollToRef = (ref) => {  
-
-  console.log(ref)
-  
-  let scroll = Scroll.animateScroll
-
-  if(ref && ref.current) {
-    scroller.scrollTo('coinData', {
-      duration: 500,
-      smooth: true,
-      offset: -10
-    })
-  }
-}
-
 
 type Props = {
   coins: any,
@@ -116,7 +95,6 @@ const CoinsTable: FunctionComponent<Props> = ({coins, error, loading, searching}
                     {
                       activeCoin && coin ? (
                         <motion.div initial={{ opacity: 0}} animate={{ opacity: 1}}>
-                          <Element name="coinData" className="element"></Element>
                           <div>
                             <ExpandedCoin 
                             id={coin.id} 

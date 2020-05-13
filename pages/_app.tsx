@@ -8,6 +8,12 @@ const App = ({ Component, pageProps }) => {
         <>
             <NextSeo
                 title={'Top Cryptocurrencies Today'}
+                additionalMetaTags={[
+                    {
+                        property: 'viewport',
+                        content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
+                    }
+                ]}
             />
             <Component {...pageProps} />
         </>
