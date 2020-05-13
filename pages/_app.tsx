@@ -7,10 +7,10 @@ const App = ({ Component, pageProps }) => {
     return (
         <>
             <NextSeo
-                title={'Top Cryptocurrencies Today'}
+                title={'Top Cryptocurrencies By Market Capitalization'}
                 additionalMetaTags={[
                     {
-                        property: 'viewport',
+                        name: 'viewport',
                         content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
                     }
                 ]}
