@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useState, useEffect } from "react"
-import useSWR from 'swr'
 import fetch from '../lib/fetch'
 import tw from 'twin.macro'
 import {H1, Paragraph, Logo} from '../components/Typography'

@@ -4,7 +4,6 @@ import {css} from "@emotion/core"
 import { CoinIdentity } from "./CoinIdentity"
 import { Paragraph, CoinData } from "../Typography"
 import { PriceChange } from "../../lib/helpers"
-import useSWR from 'swr'
 import fetch from '../../lib/fetch'
 import Skeleton from "react-loading-skeleton"
 import { Line } from 'react-chartjs-2';
@@ -42,11 +41,11 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
     const [activeInterval, setInterval] = useState('24h')
     const [activeIntervalDays, setIntervalDays] = useState('1')
 
-    let coin = useSWR(activeIntervalDays ? `${process.env.API_URL}coins/${id}/market_chart?vs_currency=usd&days=${activeIntervalDays}` : null, fetch) 
-
     useEffect(() => {
-        if(coin && coin.data) {
-            const coinData = coin.data.prices
+
+        fetch(`${process.env.API_URL}/coins/${id}/market_chart?vs_currency=usd&days=${activeIntervalDays}`).then(response => {     
+            console.log(response)
+            const coinData = response.prices
 
             setChartData(coinData)
 
@@ -63,8 +62,8 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                 setCoinPrices(prices)
                 setCoinDates(dates)
             }
-        }
-    }, [coin, coin.data])
+        })
+    }, [activeIntervalDays])
 
     const returnPrice = (price, short?) => {
         return price > 1 || price  < -1 ? [short ? price.toFixed(3) : price] : price.toFixed(6)
