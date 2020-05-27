@@ -173,11 +173,15 @@ const ExpandedCoin: FunctionComponent<Props> = ({id, image, symbol, name, market
                                 backgroundColor: process.env.LIGHT_BLUE,
                                 pointRadius: 0
                             }],
+                            
                         }
                     }
-                    
+
                     options={
                         {
+                            animation: {
+                                duration: 0
+                            },
                             responsive: true,
                             tooltips: {
                                 mode: 'label',
