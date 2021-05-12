@@ -11,7 +11,7 @@
     "@babel/plugin-proposal-export-default-from": "^7.8.3",
     "@fnando/sparkline": "^0.3.10",
     "@types/chart.js": "^2.9.20",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "dotenv": "^8.2.0",
     "dotenv-webpack": "^1.7.0",
     "framer-motion": "^1.10.3",
